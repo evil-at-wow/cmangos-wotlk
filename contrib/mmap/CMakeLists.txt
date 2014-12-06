@@ -21,6 +21,29 @@ ADD_DEFINITIONS( -DNO_vsnprintf )
 ADD_DEFINITIONS("-ggdb")
 ADD_DEFINITIONS("-O3")
 
+# ACE libraries
+unset(ACE_INCLUDE_DIR CACHE)
+unset(ACE_LIBRARIES CACHE)
+unset(ACE_LIBRARIES_DIR CACHE)
+unset(ACE_INCLUDE_DIR)
+unset(ACE_LIBRARIES)
+unset(ACE_LIBRARIES_DIR)
+if(ACE_USE_EXTERNAL)
+  find_package(ACE)
+  if(NOT ACE_FOUND)
+    message(FATAL_ERROR
+      "This project requires ACE installed when ACE_USE_EXTERNAL is set. Please download the ACE Micro Release Kit from http://download.dre.vanderbilt.edu/ and install it. If this script didn't find ACE and it was correctly installed please set ACE_ROOT to the correct path."
+    )
+  endif()
+  if(EXISTS ${ACE_INCLUDE_DIR}/ace/Stack_Trace.h)
+    set(HAVE_ACE_STACK_TRACE_H ON) # config.h.cmake
+  endif()
+else()
+  include(../../cmake/ImportACE.cmake)
+
+  add_subdirectory(../../dep/ACE_wrappers dep/ACE_wrappers)
+endif()
+
 include_directories(
     ../../src
     ../../src/shared
@@ -28,11 +51,10 @@ include_directories(
     ../../src/game/vmap
     ../../dep/include/g3dlite
     ../../src/framework
-    ../../dep/ACE_wrappers
-    ../../objdir/dep/ACE_wrappers
     ../../dep/recastnavigation/Detour/Include
     ../../dep/recastnavigation/Recast/Include
     ../../dep/src/zlib
+    ${ACE_INCLUDE_DIR}
 )
 
 add_library(zlib
@@ -176,4 +198,11 @@ set(SOURCES
 
 add_executable( MoveMapGen ${SOURCES} )
 
-target_link_libraries( MoveMapGen g3dlite vmap Detour Recast zlib )
+
+# The sources in src/game and contrib/mmap/src need ACE headers, so make sure that ACE is built first!
+if(NOT ACE_USE_EXTERNAL)
+  add_dependencies( vmap ACE_Project )
+  add_dependencies( MoveMapGen ACE_Project )
+endif()
+
+target_link_libraries( MoveMapGen g3dlite vmap Detour Recast zlib ${ACE_LIBRARIES} )
