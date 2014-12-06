@@ -21,9 +21,9 @@
 
 #include "Utilities/UnorderedMapSet.h"
 
-#include "../../dep/recastnavigation/Detour/Include/DetourAlloc.h"
-#include "../../dep/recastnavigation/Detour/Include/DetourNavMesh.h"
-#include "../../dep/recastnavigation/Detour/Include/DetourNavMeshQuery.h"
+#include "DetourAlloc.h"
+#include "DetourNavMesh.h"
+#include "DetourNavMeshQuery.h"
 
 //  memory management
 inline void* dtCustomAlloc(int size, dtAllocHint /*hint*/)
