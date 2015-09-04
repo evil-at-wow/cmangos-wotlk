@@ -307,8 +307,8 @@ FILE* Log::openGmlogPerAccount(uint32 account)
     if (m_gmlog_filename_format.empty())
         return nullptr;
 
-    char namebuf[MANGOS_PATH_MAX];
-    snprintf(namebuf, MANGOS_PATH_MAX, m_gmlog_filename_format.c_str(), account);
+    char namebuf[4096];
+    snprintf(namebuf, sizeof(namebuf), m_gmlog_filename_format.c_str(), account);
     return fopen(namebuf, "a");
 }
 

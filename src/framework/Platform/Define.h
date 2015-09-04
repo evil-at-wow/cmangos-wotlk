@@ -50,8 +50,6 @@ typedef ACE_SHLIB_HANDLE MANGOS_LIBRARY_HANDLE;
 #define MANGOS_CLOSE_LIBRARY(hlib)      ACE_OS::dlclose(hlib)
 #define MANGOS_GET_PROC_ADDR(hlib,name) ACE_OS::dlsym(hlib,name)
 
-#define MANGOS_PATH_MAX PATH_MAX                            // ace/os_include/os_limits.h -> ace/Basic_Types.h
-
 #if PLATFORM == PLATFORM_WINDOWS
 #  define MANGOS_EXPORT __declspec(dllexport)
 #  define MANGOS_IMPORT __cdecl
